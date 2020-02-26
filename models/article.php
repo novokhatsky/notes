@@ -11,7 +11,7 @@ Class Article
         $this->db = $db;
     }
 
-    function list($seek)
+    function list($seek, $id_author)
     {
         foreach ($seek as &$key) {
             if (strlen($key) != 0) {
@@ -46,18 +46,21 @@ Class Article
                     group by
                         id_article
                 ) as seeked using (id_article)
+            where
+                id_author in (1, :id_author)
             order by
                 cnt desc';
 
         return $this
                     ->db
                     ->getList($query, [
-                                        'key1' => $seek[0],
-                                        'key2' => $seek[1],
-                                        'key3' => $seek[2],
-                                        'key4' => $seek[3],
-                                        'key5' => $seek[4],
-                                        'key6' => $seek[5],
+                                        'key1'      => $seek[0],
+                                        'key2'      => $seek[1],
+                                        'key3'      => $seek[2],
+                                        'key4'      => $seek[3],
+                                        'key5'      => $seek[4],
+                                        'key6'      => $seek[5],
+                                        'id_author' => $id_author,
                                       ]);
     }
 
@@ -177,10 +180,14 @@ Class Article
         $this->db->beginTransaction();
 
         # вставляем статью, получаем id, вставляем ключевые поля
-        $query = 'insert into articles (header, article) values (:header, :article)';
+        $query = 'insert into articles (header, article, id_author) values (:header, :article, :id_author)';
         $id_article = $this
                             ->db
-                            ->insertData($query, ['header' => $article['header'], 'article' => $article['article']]);
+                            ->insertData($query, [
+                                                    'header'    => $article['header'],
+                                                    'article'   => $article['article'],
+                                                    'id_author' => $article['id_author'],
+                                                 ]);
 
         if ($id_article != -1) {
             $error = false;

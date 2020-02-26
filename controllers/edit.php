@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['save'])) {
 
         if (!empty($_POST['header']) && !empty($_POST['keywords']) && !empty($_POST['article'])) {
-            $article['header'] = $_POST['header'];
-            $article['keywords'] = $_POST['keywords'];
+            $article['header'] = htmlspecialchars($_POST['header']);
+            $article['keywords'] = htmlspecialchars($_POST['keywords']);
             $article['article'] = advor\models\Convert::html2text(nl2br($_POST['article'], false));
 
             $id_article = isset($_POST['id_article']) ? (int)$_POST['id_article'] : 0;
@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 }
             } else {
+                $id_default_user = 1;
+                $article['id_author'] = isset($_POST['private']) ? $id_current_user->getValue() : $id_default_user;
                 if ($new_article->add($article)) {
                     header('Location: ' . BASE_URL);
                     exit();

@@ -15,7 +15,7 @@
     <div><input type="text" name="keywords" class="input" value="<?=$article_keywords?>" required></div>
     <?php
         if ($id_current_user->getValue()) { ?>
-            <div><input type="checkbox" name="personal"> Личное</div>
+            <div><input type="checkbox" name="private" value="1">Приватное</div>
     <?php
         }
     ?>
