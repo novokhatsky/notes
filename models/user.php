@@ -10,13 +10,9 @@ Class User
 
     public $name;
 
-    function __construct($db, $id_user = 0)
+    function __construct($db)
     {
         $this->db = $db;
-
-        if ($id_user) {
-            $this->id_user = $id_user;
-        }
     }
 
     function getInfo($id_user)

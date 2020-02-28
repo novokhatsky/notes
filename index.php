@@ -33,7 +33,7 @@ if (isset($param[0])) {
 
 $db = new \advor\module\Db($config);
 $id_current_user = new \advor\module\SessionVar(UID . 'id_user');
-$current_user = new \advor\models\User($db, $id_current_user->getValue());
+$current_user = new \advor\models\User($db);
 
 $fullname = "controllers/{$action}.php";
 

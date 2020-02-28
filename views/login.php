@@ -12,9 +12,9 @@
     <div><input type="text" name="login" class="input inp-small" required></div>
     <div>Пароль</div>
     <div><input type="password" name="password" class="input inp-small" required></div>
-    <div>
-        <a href="<?=BASE_URL?>"><button class="button">Отмена</button></a>
-        <input type="submit" name="auth" value="Войти" class="button">
+    <div style="display: flex; justify-content: center; flex-direction: row-reverse;">
+        <div><input type="submit" name="auth" value="Войти" class="button"></div>
+        <div><a href="<?=BASE_URL?>"><button class="button">Отмена</button></a></div>
     </div>
 </form>
 

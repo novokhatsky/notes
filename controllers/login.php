@@ -1,13 +1,14 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     if (isset($_POST['auth'])) {
         $login = htmlspecialchars($_POST['login']);
         $pass = htmlspecialchars($_POST['password']);
-
         $result_auth = $current_user->checkExists($login, $pass);
+    
         if (count($result_auth)) {
-            $id_current_user->setValue($result_auth['id_user']);
+            $id_user = new \advor\module\SessionVar(UID . 'id_user', $result_auth['id_user']);
             $key = new \advor\module\SessionVar(UID . 'key', $pass);
 
             header('Location: ' . BASE_URL);

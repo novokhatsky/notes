@@ -105,7 +105,7 @@ Class Article
 
     function getDetal($id_article, $key)
     {
-        $query = 'select header, article, id_author from articles where id_article = :id_article limit 1';
+        $query = 'select header, article, id_author from articles where id_article = :id_article';
 
         $article = $this
                         ->db
@@ -116,6 +116,16 @@ Class Article
         }
 
         return $article;
+    }
+
+
+    function getIdAuthor($id_article)
+    {
+        $query = 'select id_author from articles where id_article = :id_article';
+
+        return $this
+                    ->db
+                    ->getRow($query, ['id_article' => $id_article]);
     }
 
 
@@ -187,7 +197,7 @@ Class Article
     {
         $this->db->beginTransaction();
 
-        if (strlen($key) && $article['id_author'] != 1) {
+        if (strlen($key)) {
             $text_article = $this->encrypt($key, $article['article']);
         } else {
             $text_article = $article['article'];
@@ -226,13 +236,13 @@ Class Article
     {
         $this->db->beginTransaction();
 
-        if (strlen($key) && $article['id_author'] != 1) {
+        if (strlen($key)) {
             $text_article = $this->encrypt($key, $article['article']);
         } else {
             $text_article = $article['article'];
         }
 
-        $query = 'update articles set header = :header, article = :article, id_author = :id_author where id_article = :id_article';
+        $query = 'update articles set header = :header, article = :article where id_article = :id_article';
 
         $result = $this
                         ->db
@@ -240,7 +250,6 @@ Class Article
                                                 'header'     => $article['header'],
                                                 'article'    => $text_article,
                                                 'id_article' => $id_article,
-                                                'id_author'  => $article['id_author'],
                                              ]);
         if ($result != -1) {
             $error = false;

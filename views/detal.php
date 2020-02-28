@@ -8,11 +8,15 @@
 <body>
 
 <div class="content">
-    <div class="name"><?=$article['header']?></div>
+    <h3><?=$article['header']?></h3>
     <div><?=$text?></div>
 </div>
 
-<div><a href="/notes/edit/<?=$id_article?>">Редактировать</a></div>
+<form>
+    <button class="button" formaction="<?=BASE_URL?>">Назад</button>
+    <button class="button" formaction="<?=BASE_URL?>edit/<?=$id_article?>">Редактор</button>
+</form>
+
 
 </body>
 </html>

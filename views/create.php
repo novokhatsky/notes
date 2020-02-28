@@ -14,8 +14,8 @@
     <div>Ключевые слова (через запятую)</div>
     <div><input type="text" name="keywords" class="input" value="<?=$article_keywords?>" required></div>
     <?php
-        if ($id_current_user->getValue()) { ?>
-            <div><input type="checkbox" name="private" value="1" <?=$status_private?>>Приватное</div>
+        if ($id_current_user->getValue() && (!$id_article)) { ?>
+            <div><input type="checkbox" name="private" value="1">Шифровать</div>
     <?php
         }
     ?>
