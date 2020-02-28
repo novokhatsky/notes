@@ -16,8 +16,6 @@ Class User
 
         if ($id_user) {
             $this->id_user = $id_user;
-            $result = $this->getInfo($id_user);
-            $this->$name = $result['name'];
         }
     }
 

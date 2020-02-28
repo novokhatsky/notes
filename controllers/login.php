@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $result_auth = $current_user->checkExists($login, $pass);
         if (count($result_auth)) {
             $id_current_user->setValue($result_auth['id_user']);
+            $key = new \advor\module\SessionVar(UID . 'key', $pass);
+
             header('Location: ' . BASE_URL);
             exit();
         }

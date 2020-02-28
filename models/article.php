@@ -4,6 +4,8 @@ namespace advor\models;
 
 Class Article
 {
+    use \advor\module\CryptoLib;
+
     private $db;
 
     function __construct($db)
@@ -101,13 +103,19 @@ Class Article
     }
 
 
-    function getDetal($id_article)
+    function getDetal($id_article, $key)
     {
-        $query = 'select header, article from articles where id_article = :id_article limit 1';
+        $query = 'select header, article, id_author from articles where id_article = :id_article limit 1';
 
-        return $this
-                    ->db
-                    ->getRow($query, ['id_article' => $id_article]);
+        $article = $this
+                        ->db
+                        ->getRow($query, ['id_article' => $id_article]);
+
+        if (strlen($key) && $article['id_author'] != 1) {
+            $article['article'] = $this->decrypt($key, $article['article']);
+        }
+
+        return $article;
     }
 
 
@@ -175,9 +183,15 @@ Class Article
     }
 
 
-    function add($article)
+    function add($article, $key)
     {
         $this->db->beginTransaction();
+
+        if (strlen($key) && $article['id_author'] != 1) {
+            $text_article = $this->encrypt($key, $article['article']);
+        } else {
+            $text_article = $article['article'];
+        }
 
         # вставляем статью, получаем id, вставляем ключевые поля
         $query = 'insert into articles (header, article, id_author) values (:header, :article, :id_author)';
@@ -185,7 +199,7 @@ Class Article
                             ->db
                             ->insertData($query, [
                                                     'header'    => $article['header'],
-                                                    'article'   => $article['article'],
+                                                    'article'   => $text_article,
                                                     'id_author' => $article['id_author'],
                                                  ]);
 
@@ -208,17 +222,25 @@ Class Article
     }
 
 
-    function update($id_article, $article)
+    function update($id_article, $article, $key)
     {
         $this->db->beginTransaction();
-        $query = 'update articles set header = :header, article = :article where id_article = :id_article';
+
+        if (strlen($key) && $article['id_author'] != 1) {
+            $text_article = $this->encrypt($key, $article['article']);
+        } else {
+            $text_article = $article['article'];
+        }
+
+        $query = 'update articles set header = :header, article = :article, id_author = :id_author where id_article = :id_article';
 
         $result = $this
                         ->db
                         ->updateData($query, [
                                                 'header'     => $article['header'],
-                                                'article'    => $article['article'],
+                                                'article'    => $text_article,
                                                 'id_article' => $id_article,
+                                                'id_author'  => $article['id_author'],
                                              ]);
         if ($result != -1) {
             $error = false;
