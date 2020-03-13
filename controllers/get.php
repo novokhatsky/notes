@@ -8,6 +8,5 @@ $key = new \advor\module\SessionVar(UID . 'key');
 
 $article = $article->getDetal($id_article, $key->getValue());
 
-$text = advor\models\Convert::text2html($article['article']);
-
 require_once 'views/detal.php';
+

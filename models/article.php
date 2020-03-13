@@ -5,6 +5,7 @@ namespace advor\models;
 Class Article
 {
     use \advor\module\CryptoLib;
+    use \advor\module\Convert;
 
     private $db;
 
@@ -115,6 +116,8 @@ Class Article
             $article['article'] = $this->decrypt($key, $article['article']);
         }
 
+        $article['article'] = $this->text2html($article['article']);
+
         return $article;
     }
 
@@ -197,6 +200,8 @@ Class Article
     {
         $this->db->beginTransaction();
 
+        $article['article'] = htmlspecialchars($this->html2text(nl2br($article['article'], false)));
+
         if (strlen($key)) {
             $text_article = $this->encrypt($key, $article['article']);
         } else {
@@ -235,6 +240,8 @@ Class Article
     function update($id_article, $article, $key)
     {
         $this->db->beginTransaction();
+
+        $article['article'] = htmlspecialchars($this->html2text(nl2br($article['article'], false)));
 
         if (strlen($key)) {
             $text_article = $this->encrypt($key, $article['article']);

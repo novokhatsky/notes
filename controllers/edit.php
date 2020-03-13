@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['header']) && !empty($_POST['keywords']) && !empty($_POST['article'])) {
             $article['header'] = htmlspecialchars($_POST['header']);
             $article['keywords'] = htmlspecialchars($_POST['keywords']);
-            $article['article'] = advor\models\Convert::html2text(nl2br($_POST['article'], false));
+            $article['article'] = $_POST['article'];
             $id_article = isset($_POST['id_article']) ? (int)$_POST['id_article'] : 0;
 
             if ($id_article) {
@@ -61,7 +61,7 @@ if ($id_article) {
     // редактируем
     $article_detail = $new_article->getDetal($id_article, $key->getValue());
     $article_header = $article_detail['header'];
-    $article_text = str_replace('<br>', '', \advor\models\Convert::text2html($article_detail['article']));
+    $article_text = str_replace('<br>', '', $article_detail['article']);
 
     $article_keywords_array = $new_article->getKeywordsArticle($id_article);
     $article_keywords = [];

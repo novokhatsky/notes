@@ -9,7 +9,7 @@
 
 <div class="content">
     <h3><?=$article['header']?></h3>
-    <div><?=$text?></div>
+    <div><?=$article['article']?></div>
 </div>
 
 <form>

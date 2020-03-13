@@ -30,6 +30,14 @@ html,body {
     margin: 0.5rem;
 }
 
+.button:hover {
+    background: #026bcd;
+}
+
+.button:active {
+    border: 2px solid red;
+}
+
 .b-small {
     width: 4rem;
     height: 1.5rem;

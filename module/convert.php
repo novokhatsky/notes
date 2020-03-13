@@ -1,10 +1,10 @@
 <?php
 
-namespace advor\models;
+namespace advor\module;
 
-Class Convert
+Trait Convert
 {
-    const DICT = [
+    private $DICT = [
         '<br>'      => '?br?',
         '<b>'       => '?b?',
         '</b>'      => '?/b?',
@@ -15,19 +15,19 @@ Class Convert
     ];
 
 
-    static function html2text($text)
+    public function html2text($text)
     {
-        foreach (self::DICT as $key => $value) {
+        foreach ($this->DICT as $key => $value) {
             $text = str_replace($key, $value, $text);
         }
-        $text = htmlspecialchars($text);
+
         return $text;
     }
 
 
-    static function text2html($text)
+    public function text2html($text)
     {
-        foreach (self::DICT as $key => $value) {
+        foreach ($this->DICT as $key => $value) {
             $text = str_replace($value, $key, $text);
         }
 
