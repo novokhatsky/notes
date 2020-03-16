@@ -17,6 +17,7 @@ Class Article
     function list($seek, $id_author)
     {
         foreach ($seek as &$key) {
+
             if (strlen($key) != 0) {
                 $key = '%' . $key . '%';
             }
@@ -24,6 +25,7 @@ Class Article
         unset($key);
 
         for ($i = 0; $i < 6; $i++) {
+
             if (!isset($seek[$i])) {
                 $seek[$i] = '';
             }
@@ -71,6 +73,7 @@ Class Article
     function keywords($seek)
     {
         for ($i = 0; $i < 6; $i++) {
+
             if (!isset($seek[$i])) {
                 $seek[$i] = '';
             } else {
@@ -187,6 +190,7 @@ Class Article
 
             if ($this->addInteraction($id_article, $id_keyword) == -1) {
                 if ($this->db->errInfo[1] != '1062') {
+
                     return false;
                 }
             }
@@ -200,26 +204,19 @@ Class Article
     {
         $this->db->beginTransaction();
 
-        $article['article'] = htmlspecialchars($this->html2text(nl2br($article['article'], false)));
-
-        if (strlen($key)) {
-            $text_article = $this->encrypt($key, $article['article']);
-        } else {
-            $text_article = $article['article'];
-        }
-
         # вставляем статью, получаем id, вставляем ключевые поля
         $query = 'insert into articles (header, article, id_author) values (:header, :article, :id_author)';
         $id_article = $this
                             ->db
                             ->insertData($query, [
                                                     'header'    => $article['header'],
-                                                    'article'   => $text_article,
+                                                    'article'   => $this->convert($article['article'], $key),
                                                     'id_author' => $article['id_author'],
                                                  ]);
 
         if ($id_article != -1) {
             $error = false;
+
             if (!$this->addKey($id_article, $article['keywords'])) {
                 $error = true;
             }
@@ -229,11 +226,25 @@ Class Article
 
         if ($error) {
             $this->db->rollBack();
+
             return false;
-        } else {
-            $this->db->commit();
-            return true;
         }
+
+        $this->db->commit();
+
+        return true;
+    }
+
+
+    private function convert($article, $key)
+    {
+        $text = htmlspecialchars($this->html2text(nl2br($article, false)));
+
+        if (strlen($key)) {
+            return $this->encrypt($key, $text);
+        }
+
+        return $text;
     }
 
 
@@ -241,25 +252,19 @@ Class Article
     {
         $this->db->beginTransaction();
 
-        $article['article'] = htmlspecialchars($this->html2text(nl2br($article['article'], false)));
-
-        if (strlen($key)) {
-            $text_article = $this->encrypt($key, $article['article']);
-        } else {
-            $text_article = $article['article'];
-        }
-
         $query = 'update articles set header = :header, article = :article where id_article = :id_article';
 
         $result = $this
                         ->db
                         ->updateData($query, [
                                                 'header'     => $article['header'],
-                                                'article'    => $text_article,
+                                                'article'    => $this->convert($article['article'], $key),
                                                 'id_article' => $id_article,
                                              ]);
+
         if ($result != -1) {
             $error = false;
+
             if (!$this->addKey($id_article, $article['keywords'])) {
                 $error = true;
             }
@@ -269,10 +274,12 @@ Class Article
 
         if ($error) {
             $this->db->rollBack();
+
             return false;
-        } else {
-            $this->db->commit();
-            return true;
         }
+
+        $this->db->commit();
+
+        return true;
     }
 }

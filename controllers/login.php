@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $login = htmlspecialchars($_POST['login']);
         $pass = htmlspecialchars($_POST['password']);
         $result_auth = $current_user->checkExists($login, $pass);
-    
-        if (count($result_auth)) {
+
+        if (is_array($result_auth) && count($result_auth)) {
             $id_user = new \advor\module\SessionVar(UID . 'id_user', $result_auth['id_user']);
             $key = new \advor\module\SessionVar(UID . 'key', $pass);
 
