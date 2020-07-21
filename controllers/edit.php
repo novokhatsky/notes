@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id_article = isset($_POST['id_article']) ? (int)$_POST['id_article'] : 0;
 
             if ($id_article) {
-                // проверим права на изменение статьи
+                // узнаем автора статьи, тем самым проверим права на изменение статьи
                 $id_author = $new_article->getIdAuthor($id_article);
 
                 if ($id_author['id_author'] != $id_current_user->getValue() && $id_author['id_author'] != DEFAULT_USER) {
@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     exit();
                 }
 
-                // если это автор стаьи, то указываем пароль, разрешая шифрование
+                // если это автор статьи, то указываем пароль, разрешая шифрование
                 $pass = ($id_author['id_author'] != DEFAULT_USER) ? $key->getValue() : '';
 
                 if ($new_article->update($id_article, $article, $pass)) {
-                    header('Location: ' . BASE_URL);
+                    header('Location: ' . BASE_URL . 'get/' . $id_article);
                     exit();
                 }
             } else {
@@ -42,8 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $pass = '';
                 }
 
-                if ($new_article->add($article, $pass)) {
-                    header('Location: ' . BASE_URL);
+                // если статья добавится, то получаем id и переходим на страницу вывода статьи
+                $id_article = $new_article->add($article, $pass);
+                if ($id_article) {
+                    header('Location: ' . BASE_URL . 'get/' . $id_article);
                     exit();
                 }
             }

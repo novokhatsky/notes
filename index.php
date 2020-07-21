@@ -1,6 +1,6 @@
 <?php
 
-ini_set("error_log", "/tmp/php-error.log");
+//ini_set("error_log", "/tmp/php-error.log");
 
 require_once 'module/autoload.php';
 

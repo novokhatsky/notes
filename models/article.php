@@ -232,7 +232,7 @@ Class Article
 
         $this->db->commit();
 
-        return true;
+        return $id_article;
     }
 
 
