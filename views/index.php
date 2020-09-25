@@ -57,6 +57,9 @@
                     }
                 );
             },
+        },
+        created: function() {
+            this.seek_str = '<?php echo $saveSeekStr->getValue(); ?>';
         }
     })
 </script>
